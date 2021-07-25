@@ -515,6 +515,7 @@ public Action Command_DryRun(int client, int args) {
   ChangeSettingById("noclip", false);
   ChangeSettingById("respawning", false);
   ChangeSettingById("showimpacts", false);
+  ChangeSettingById("dropweapons", true);
 
   for (int i = 1; i <= MaxClients; i++) {
     g_TestingFlash[i] = false;
