@@ -13,7 +13,7 @@
 
 #include <get5>
 #include <pugsetup>
-#include <updater>
+#include "include/updater.inc"
 
 #include "include/practicemode.inc"
 #include "include/restorecvars.inc"
@@ -1174,6 +1174,7 @@ public void ReadPracticeSettings() {
     g_MapList.PushString("de_nuke");
     g_MapList.PushString("de_overpass");
     g_MapList.PushString("de_train");
+    g_MapList.PushString("de_vertigo");
   }
 
   Call_StartForward(g_OnPracticeModeSettingsRead);

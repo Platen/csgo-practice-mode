@@ -10,6 +10,7 @@ stock void GiveReplayEditorMenu(int client, int pos = 0) {
   Menu menu = new Menu(ReplayMenuHandler);
   char replayName[REPLAY_NAME_LENGTH];
   GetReplayName(g_ReplayId[client], replayName, REPLAY_NAME_LENGTH);
+  bool frozen = IsReplayFrozen(g_ReplayId[client]);
   menu.SetTitle("Replay editor: %s (id %s)", replayName, g_ReplayId[client]);
 
   /* Page 1 */
@@ -38,6 +39,10 @@ stock void GiveReplayEditorMenu(int client, int pos = 0) {
   menu.AddItem("stop", "Stop current replay");
   menu.AddItem("name", "Name this replay");
   menu.AddItem("copy", "Copy this replay to a new replay");
+  if (!frozen)
+    menu.AddItem("freeze", "Freeze role data (prevents accidental edits)");
+  else
+    menu.AddItem("unfreeze", "Unfreeze role data for edits");
   menu.AddItem("delete", "Delete this replay entirely");
 
   char display[128];
@@ -114,6 +119,18 @@ public int ReplayMenuHandler(Menu menu, MenuAction action, int param1, int param
       PM_Message(client, "Use .namereplay <name> to name this replay.");
       GiveReplayEditorMenu(client, GetMenuSelectionPosition());
 
+    } else if (StrContains(buffer, "freeze") == 0) {
+      PM_Message(client, "Froze replay. Role edit buttons will be disabled until the replay is unfrozen.");
+      SetReplayFrozen(g_ReplayId[client], true);
+      GiveReplayEditorMenu(client, GetMenuSelectionPosition());
+    } else if (StrContains(buffer, "unfreeze") == 0) {
+      PM_Message(client, "Unfroze replay.");
+      SetReplayFrozen(g_ReplayId[client], false);
+      // Going back to the same page in the replay menu makes sense for menu consistency,
+      // but if a user pressed this they probably want to do some edits, so there's a case
+      // to be made for not using GetMenuSelectionPosition here. Let's favor consistency in 
+      // the menu behavior for a simpler user experience.
+      GiveReplayEditorMenu(client, GetMenuSelectionPosition());
     } else if (StrEqual(buffer, "recordall")) {
       int count = 0;
       for (int i = 1; i <= MaxClients; i++) {
@@ -268,17 +285,18 @@ stock void GiveReplayRoleMenu(int client, int role, int pos = 0) {
   menu.ExitBackButton = true;
 
   bool recorded = HasRoleRecorded(g_ReplayId[client], role);
+  bool frozen = IsReplayFrozen(g_ReplayId[client]);
   if (recorded) {
-    menu.AddItem("record", "Re-record role");
+    menu.AddItem("record", "Re-record role", EnabledIf(!frozen));
   } else {
-    menu.AddItem("record", "Record role");
+    menu.AddItem("record", "Record role", EnabledIf(!frozen));
   }
 
   menu.AddItem("spawn", "Go to spawn position", EnabledIf(recorded));
-  menu.AddItem("play", "Play this recording", EnabledIf(recorded));
-  menu.AddItem("name", "Name this role", EnabledIf(recorded));
   menu.AddItem("nades", "View nade lineups", EnabledIf(recorded));
-  menu.AddItem("delete", "Delete recording", EnabledIf(recorded));
+  menu.AddItem("play", "Play this recording", EnabledIf(recorded));
+  menu.AddItem("name", "Name this role", EnabledIf(recorded && !frozen));
+  menu.AddItem("delete", "Delete recording", EnabledIf(recorded && !frozen));
 
   menu.DisplayAt(client, MENU_TIME_FOREVER, pos);
 }
