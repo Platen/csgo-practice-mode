@@ -3,6 +3,7 @@ csgo-practice-mode
 
 [![Build status](http://ci.splewis.net/job/csgo-practice-mode/badge/icon)](http://ci.splewis.net/job/csgo-practice-mode/)
 [![GitHub Downloads](https://img.shields.io/github/downloads/splewis/csgo-practice-mode/total.svg?style=flat-square&label=Downloads)](https://github.com/splewis/csgo-practice-mode/releases/latest)
+[![Discord Chat](https://img.shields.io/discord/926309849673895966.svg)](https://discord.gg/zmqEa4keCk)
 
 **Status: Supported, actively developed.**
 
@@ -45,6 +46,7 @@ For a more thorough guide for users new to configuring servers, please see [this
 - ``.prac`` launches practice mode and displays the ``.setup`` menu
 - ``.help``: displays this page
 - ``.settings``: opens the client settings menu
+- ``.exitprac``: exits practicemode
 
 ### Saving grenade positions
 - ``.nades [filter]``: displays a menu to select saved grenade positions. ``.nades`` with no argument shows all nades. ``filter`` can be any of: nade ids, category name, player name, or part of a grenade name
@@ -142,6 +144,9 @@ Note that this is not necessarily an exhaustive list; check ``cfg/sourcemod/prac
 - ``sm_grenade_trajectory_use_player_color``: whether to use cl_color to get nade trajectory color
 - ``sm_practicemode_can_be_started``: whether practicemode can be started
 
+### Discord Chat
+
+A [Discord](https://discord.gg/zmqEa4keCk) channel is available for general discussion.
 
 ### Contributions
 
